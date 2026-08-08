@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}GGL QR Studio — Custom QR Generator{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+<script src="https://unpkg.com/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
+{% endblock %}
+{% block body %}
+<div class="blob blob-a"></div><div class="blob blob-b"></div><div class="blob blob-c"></div>
+<header class="topbar">
+<a class="brand" href="/"><span class="brand-mark">✦</span><span>GGL <b>QR</b></span></a>
+<div class="top-pill">✨ Simple • Custom • Scan-ready</div>
+</header>
+<main class="shell">
+<section class="hero">
+<div class="eyebrow">🎨 QR STUDIO</div>
+<h1>Make a QR that<br><span>looks like your brand.</span></h1>
+<p>Choose what it opens, add a logo, pick a style, and watch the QR update live.</p>
+</section>
+<div class="studio">
+<section class="builder">
+<div class="card step-card">
+<div class="step-head"><span class="step-no">01</span><div><h2>What should it open?</h2><p>Pick one. We'll build the right QR data for you.</p></div></div>
+<div class="type-grid" id="typeGrid">
+<button class="type active" data-type="website"><span>🌐</span><b>Website</b><small>Open a URL</small></button>
+<button class="type" data-type="text"><span>💬</span><b>Text</b><small>Any message</small></button>
+<button class="type" data-type="email"><span>✉️</span><b>Email</b><small>Compose email</small></button>
+<button class="type" data-type="phone"><span>📞</span><b>Phone</b><small>Call a number</small></button>
+<button class="type" data-type="sms"><span>💌</span><b>SMS</b><small>Send a message</small></button>
+<button class="type" data-type="wifi"><span>📶</span><b>Wi‑Fi</b><small>Join a network</small></button>
+<button class="type" data-type="contact"><span>👤</span><b>Contact</b><small>Save a contact</small></button>
+<button class="type" data-type="whatsapp"><span>🟢</span><b>WhatsApp</b><small>Open a chat</small></button>
+</div>
+<div id="fields"></div>
+</div>
+
+<div class="card step-card">
+<div class="step-head"><span class="step-no">02</span><div><h2>Brand it</h2><p>Upload your own logo or choose a popular brand preset.</p></div></div>
+<div class="logo-tabs">
+<button class="tab active" data-tab="upload">Upload logo</button>
+<button class="tab" data-tab="brands">Popular brands</button>
+<button class="tab clear-logo" id="clearLogo">Remove logo</button>
+</div>
+<div class="tab-panel" id="uploadPanel">
+<label class="upload-zone" for="logoFile">
+<input id="logoFile" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" hidden>
+<span class="upload-icon">🖼️</span>
+<b>Drop your logo here or click to choose</b>
+<small>PNG / JPG / JPEG • maximum 2 MB • stays in this browser</small>
+</label>
+<div id="fileStatus" class="file-status"></div>
+</div>
+<div class="tab-panel hidden" id="brandsPanel">
+<div class="brand-search"><span>⌕</span><input id="brandSearch" placeholder="Search 100 popular brands…"></div>
+<div id="brandGrid" class="brand-grid"></div>
+</div>
+<div class="logo-controls">
+<div class="control-line"><label>Logo size <b id="logoSizeLabel">18%</b></label><input id="logoSize" type="range" min="8" max="28" value="18"></div>
+</div>
+</div>
+
+<div class="card step-card">
+<div class="step-head"><span class="step-no">03</span><div><h2>Choose the QR look</h2><p>Distinctive enough for your brand, safe enough to scan.</p></div></div>
+<div class="style-grid" id="styleGrid">
+<button class="style-choice active" data-style="rounded"><span class="mini-qr rounded"></span><b>Rounded</b><small>Friendly</small></button>
+<button class="style-choice" data-style="dots"><span class="mini-qr dots"></span><b>Dots</b><small>Modern</small></button>
+<button class="style-choice" data-style="classy"><span class="mini-qr classy"></span><b>Classy</b><small>Clean</small></button>
+<button class="style-choice" data-style="square"><span class="mini-qr square"></span><b>Classic</b><small>Maximum safety</small></button>
+</div>
+<div class="color-row">
+<label class="color-field">QR color <span><input id="qrColor" type="color" value="#ff6759"></span><code id="qrHex">#FF6759</code></label>
+<label class="color-field">Background <span><input id="bgColor" type="color" value="#fffaf1"></span><code id="bgHex">#FFFAF1</code></label>
+</div>
+<div class="size-row">
+<label>Output size <b id="sizeLabel">1000 × 1000 px</b></label>
+<select id="size"><option value="512">512 × 512 px</option><option value="800">800 × 800 px</option><option value="1000" selected>1000 × 1000 px</option><option value="1200">1200 × 1200 px</option><option value="1600">1600 × 1600 px</option><option value="2000">2000 × 2000 px</option></select>
+</div>
+</div>
+</section>
+
+<aside class="preview-wrap">
+<div class="preview-card">
+<div class="preview-head"><div><span>LIVE PREVIEW</span><h2>Your QR</h2></div><div class="scan-badge" id="scanBadge">✓ Scan-friendly</div></div>
+<div class="qr-stage"><div id="qrPreview"></div></div>
+<div class="preview-meta"><span id="previewType">Website QR</span><b id="previewSize">1000 × 1000 px</b></div>
+<div class="preview-actions"><button class="download primary" data-ext="png">Download PNG</button><button class="download" data-ext="svg">Download SVG</button></div>
+<p class="privacy-note">🔒 Your uploaded logo never leaves this browser. Only a small anonymous generation event is sent for service statistics.</p>
+</div>
+</aside>
+</div>
+</main>
+<footer><span>GGL QR Studio</span><span>Made for useful, beautiful QR codes.</span></footer>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

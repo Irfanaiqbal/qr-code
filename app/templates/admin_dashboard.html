@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}GGL Control Room{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block body %}
+<header class="admin-top"><div><span class="eyebrow">GGL QR STUDIO</span><h1>Control room</h1></div><form method="post" action="{{ url_for('admin_logout') }}"><button class="logout">Log out</button></form></header>
+<main class="admin-shell">
+<div class="stats"><div class="stat"><span>Total generated</span><strong>{{ total }}</strong><small>All-time requests</small></div><div class="stat"><span>Today</span><strong>{{ today }}</strong><small>QR generation events</small></div><div class="stat"><span>Unique today</span><strong>{{ unique_today }}</strong><small>Privacy-safe IP keys</small></div></div>
+<div class="charts">
+<section class="admin-card chart-card"><div class="card-title"><h2>Daily activity</h2><span>Last 30 days</span></div><canvas id="dailyChart"></canvas></section>
+<section class="admin-card chart-card"><div class="card-title"><h2>QR types</h2><span>All time</span></div><canvas id="kindChart"></canvas></section>
+</div>
+<section class="admin-card"><div class="card-title"><h2>Latest events</h2><span>Raw QR contents are never logged</span></div>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Time (UTC)</th><th>Type</th><th>Size</th><th>IP key</th></tr></thead><tbody>
+{% for r in latest %}<tr><td>#{{ r.id }}</td><td>{{ r.created_at }}</td><td><span class="tag">{{ r.kind }}</span></td><td>{{ r.size_px }} px</td><td><code>{{ r.ip_key }}…</code></td></tr>{% else %}<tr><td colspan="5" class="empty">No generation events yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+</main>
+<script>
+const daily={{ daily|tojson }}, kinds={{ kinds|tojson }};
+new Chart(document.getElementById('dailyChart'),{type:'line',data:{labels:daily.map(x=>x.day),datasets:[{label:'Generations',data:daily.map(x=>x.count),tension:.35,fill:true}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}});
+new Chart(document.getElementById('kindChart'),{type:'doughnut',data:{labels:kinds.map(x=>x.kind),datasets:[{data:kinds.map(x=>x.count)}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+</script>
+{% endblock %}
