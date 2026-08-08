@@ -4,8 +4,8 @@ SECRET_KEY = "replace-this-with-a-long-random-secret-key"
 # Intentionally NOT /admin.
 ADMIN_PATH = "k7p4x9-panel"
 
-ADMIN_USERNAME = "ggl_owner"
-ADMIN_PASSWORD = "ChangeThis-GGL-Admin-2026!"
+ADMIN_USERNAME = "minha5"
+ADMIN_PASSWORD = "minha@123"
 
 DATABASE = "ggl_qr.sqlite3"
 
